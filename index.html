@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-063933E3C2"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-063933E3C2");
+    </script>
+    <title>Cymatics - See a frequency as a Chladni figure</title>
+    <link rel="canonical" href="https://evoluteur.github.io/cymatics/" />
+    <meta charset="utf-8" />
+    <meta http-equiv="content-language" content="en" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="apple-touch-icon" href="icon-192.png" />
+    <meta name="theme-color" content="#0b0b18" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Marcellus"
+    />
+    <link href="cy.css" rel="stylesheet" />
+    <script src="js/cymatics.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+      if ("serviceWorker" in navigator) {
+        addEventListener("load", () => navigator.serviceWorker.register("sw.js"));
+      }
+    </script>
+    <meta
+      name="keywords"
+      content="cymatics, chladni, chladni figures, chladni patterns, standing wave, nodal lines, resonance, frequency, vibration, plate, drumhead, bessel, sand, physics, webaudio"
+    />
+    <meta
+      name="description"
+      content="Play a frequency and watch the sand settle into its Chladni figure. Square plate and drumhead modes, computed from the wave equation, with the tone you are looking at."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Olivier Giulieri" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Evoluteur" />
+    <meta property="og:title" content="Cymatics" />
+    <meta
+      property="og:description"
+      content="Play a frequency and watch the sand settle into its Chladni figure. Square plate and drumhead modes, computed from the wave equation."
+    />
+    <meta property="og:url" content="https://evoluteur.github.io/cymatics/" />
+    <meta
+      property="og:image"
+      content="https://raw.githubusercontent.com/evoluteur/cymatics/main/cymatics.png"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Cymatics" />
+    <meta
+      name="twitter:description"
+      content="Play a frequency and watch the sand settle into its Chladni figure."
+    />
+    <meta
+      name="twitter:image"
+      content="https://raw.githubusercontent.com/evoluteur/cymatics/main/cymatics.png"
+    />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareSourceCode",
+        "name": "Cymatics",
+        "description": "Play a frequency and watch the sand settle into its Chladni figure, computed from the wave equation.",
+        "url": "https://evoluteur.github.io/cymatics/",
+        "codeRepository": "https://github.com/evoluteur/cymatics",
+        "license": "https://github.com/evoluteur/cymatics/blob/main/LICENSE",
+        "programmingLanguage": "JavaScript",
+        "author": {
+          "@type": "Person",
+          "name": "Olivier Giulieri",
+          "url": "https://evoluteur.github.io/"
+        }
+      }
+    </script>
+  </head>
+
+  <body onload="init()">
+    <header id="header">
+      <div class="links">
+        <a href="modes.html">Modes</a>
+        <a
+          href="https://github.com/evoluteur/cymatics"
+          target="_blank"
+          rel="noopener"
+          >GitHub</a
+        >
+      </div>
+      <h1>Cy<span>matics</span></h1>
+    </header>
+
+    <main>
+      <div class="stage"><canvas id="plate"></canvas></div>
+
+      <div class="panel">
+        <h2 id="pname"></h2>
+        <p class="tagline" id="tagline"></p>
+        <p class="blurb" id="blurb"></p>
+
+        <label>
+          <span>Frequency <b id="freqVal"></b></span>
+          <input
+            type="range"
+            id="freq"
+            min="0"
+            max="1000"
+            step="1"
+            oninput="onFrequency(this)"
+          />
+        </label>
+
+        <div class="steps">
+          <button onclick="onStep(-1)" aria-label="previous mode">&larr;</button>
+          <span>mode <b id="modeName"></b></span>
+          <button onclick="onStep(1)" aria-label="next mode">&rarr;</button>
+        </div>
+
+        <label>
+          <span>Shape</span>
+          <select id="shape" onchange="onShape(this)">
+            <option value="square">Square plate</option>
+            <option value="circle">Drumhead</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Size <b id="sizeVal"></b></span>
+          <input
+            type="range"
+            id="size"
+            min="10"
+            max="60"
+            step="1"
+            oninput="onSize(this)"
+          />
+        </label>
+
+        <label id="mixRow">
+          <span>Superposition <b id="mixVal"></b></span>
+          <input
+            type="range"
+            id="mix"
+            min="-1"
+            max="1"
+            step="0.02"
+            oninput="onMix(this)"
+          />
+        </label>
+
+        <label>
+          <span>Grains of sand <b id="grainsVal"></b></span>
+          <input
+            type="range"
+            id="grains"
+            min="2000"
+            max="40000"
+            step="1000"
+            oninput="onGrains(this)"
+          />
+        </label>
+
+        <label>
+          <span>Show</span>
+          <select id="render" onchange="onRender(this)">
+            <option value="sand">Sand</option>
+            <option value="field">Standing wave</option>
+            <option value="both">Both</option>
+          </select>
+        </label>
+
+        <div class="buttons">
+          <button id="play" onclick="toggleTone()">Play</button>
+          <button onclick="scatter()">Scatter</button>
+          <button onclick="savePNG()">PNG</button>
+        </div>
+
+        <p class="hint">
+          Drag the frequency slider and the plate jumps to whichever mode
+          resonates nearest. The sand is not drawn: each grain is pushed away
+          from the parts of the plate that move and comes to rest where it does
+          not.
+        </p>
+      </div>
+    </main>
+
+    <section class="notes">
+      <h3>What you are looking at</h3>
+      <p>
+        Ernst Chladni sprinkled sand on a metal plate and drew a violin bow
+        along its edge. At most speeds nothing happened. At certain ones the
+        plate rang, and the sand fled the moving parts to gather along the
+        lines that stood still. Those lines are the nodes of a standing wave,
+        and the picture they make is a Chladni figure.
+      </p>
+      <p>
+        The square plate here is a steel sheet 1&nbsp;mm thick, free at its
+        edges. Its figures are the zero set of
+        <code>cos(n&pi;x)&nbsp;cos(m&pi;y) &minus;
+        cos(m&pi;x)&nbsp;cos(n&pi;y)</code>: two modes of the same frequency,
+        superposed so that they cancel. The superposition slider sweeps that
+        cancellation, which is why one frequency can show several figures.
+      </p>
+      <p>
+        The drumhead is an ideal circular membrane fixed at its rim. Its modes
+        are Bessel functions, <code>J<sub>n</sub>(&alpha;r)&nbsp;cos(n&theta;)</code>,
+        giving nodal diameters and nodal circles. The Bessel functions are
+        computed from their series and their zeros are found by bisection, so
+        nothing here comes from a table.
+      </p>
+      <p>
+        The frequencies are the real ones for these idealised objects: a stiff
+        plate rings at frequencies proportional to
+        <code>m&sup2;&nbsp;+&nbsp;n&sup2;</code>, while a membrane, having
+        tension but no stiffness, rings in proportion to the Bessel zero
+        itself. A real plate of brass or glass, with its own thickness,
+        mounting, and imperfections, will not match these numbers exactly. The
+        shapes are the honest part; treat the frequencies as those of the model.
+      </p>
+    </section>
+
+    <footer>
+      <p>
+        <a href="https://github.com/evoluteur/cymatics">Cymatics</a> is open
+        source at GitHub with MIT license. No libraries, no images: the plate,
+        the sand, and the tone are all computed in the page.
+      </p>
+      <p>
+        If you like frequencies, see also
+        <a href="https://evoluteur.github.io/healing-frequencies/"
+          >Healing-Frequencies</a
+        >
+        and
+        <a href="https://evoluteur.github.io/binaural-beats/">Binaural-Beats</a>.
+        If you like figures made of circles and lines, see
+        <a href="https://evoluteur.github.io/sacred-geometry/"
+          >Sacred-Geometry</a
+        >
+        and
+        <a href="https://evoluteur.github.io/platonic-solids/">Platonic-Solids</a>.
+      </p>
+      &copy; 2026
+      <a href="https://evoluteur.github.io/" target="_blank">Olivier Giulieri</a>
+    </footer>
+  </body>
+</html>

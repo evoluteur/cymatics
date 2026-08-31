@@ -1,0 +1,288 @@
+/*
+  Cymatics
+  https://evoluteur.github.io/cymatics/
+  (c) 2026 Olivier Giulieri
+*/
+
+:root {
+  --bg: #0b0b18;
+  --bg2: #16162e;
+  --ink: #ece7dc;
+  --muted: #9d97be;
+  --accent: #d4af37;
+  --accent2: #ffd77a;
+  --line: #ffffff1f;
+}
+* {
+  box-sizing: border-box;
+}
+html {
+  color: var(--ink);
+  background: var(--bg)
+    radial-gradient(circle at 50% 0%, #232048 0%, #12122a 55%, #0b0b18 100%)
+    fixed;
+  scroll-behavior: smooth;
+  min-height: 100%;
+}
+html,
+button,
+select,
+input {
+  font-family: "Marcellus", Georgia, serif;
+  font-size: 16px;
+}
+body {
+  margin: 0;
+  padding: 0 0 40px;
+}
+h1,
+h2,
+h3 {
+  font-weight: normal;
+  margin: 0;
+}
+a {
+  color: var(--ink);
+  transition: color 0.4s;
+}
+a:hover {
+  color: var(--accent2);
+}
+
+#header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 12px 20px 10px;
+  background: #0b0b18e6;
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+#header h1 {
+  display: inline-block;
+  font-size: 22px;
+  letter-spacing: 0.04em;
+}
+#header h1 > span {
+  color: var(--accent);
+}
+#header .links {
+  float: right;
+  padding-top: 6px;
+  font-size: 14px;
+}
+#header .links > a {
+  margin-left: 16px;
+  text-decoration: none;
+}
+
+main {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 24px;
+  max-width: 1180px;
+  margin: 24px auto;
+  padding: 0 20px;
+}
+@media (max-width: 860px) {
+  main {
+    grid-template-columns: 1fr;
+  }
+}
+
+.stage {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  background: #00000040;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.stage > canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.panel > h2 {
+  font-size: 25px;
+  color: var(--accent2);
+}
+.panel > h2 b {
+  font-weight: normal;
+  color: var(--ink);
+}
+.panel > .tagline {
+  color: var(--muted);
+  font-style: italic;
+  margin: 2px 0 12px;
+}
+.panel > .blurb {
+  color: var(--muted);
+  line-height: 1.55;
+  font-size: 14px;
+  margin: 0 0 22px;
+}
+.panel label {
+  display: block;
+  margin-bottom: 14px;
+  font-size: 14px;
+  color: var(--muted);
+}
+.panel label > span {
+  display: block;
+  margin-bottom: 4px;
+}
+.panel label b {
+  color: var(--accent2);
+  font-weight: normal;
+}
+input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+select {
+  width: 100%;
+  padding: 6px 8px;
+  color: var(--ink);
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 22px;
+}
+button {
+  flex: 1;
+  min-width: 84px;
+  padding: 9px 10px;
+  color: var(--ink);
+  background: #ffffff0f;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  cursor: pointer;
+  transition:
+    background 0.3s,
+    color 0.3s,
+    border-color 0.3s;
+}
+button:hover {
+  color: var(--accent2);
+  border-color: #ffd77a66;
+  background: #ffffff1a;
+}
+.steps {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.steps > button {
+  flex: 0 0 40px;
+  min-width: 40px;
+  padding: 4px 0;
+}
+.steps > span {
+  flex: 1;
+  text-align: center;
+  font-size: 14px;
+  color: var(--muted);
+}
+.steps > span > b {
+  color: var(--accent2);
+  font-weight: normal;
+}
+.hint {
+  margin-top: 16px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--muted);
+  opacity: 0.75;
+}
+
+.notes {
+  max-width: 1180px;
+  margin: 30px auto 0;
+  padding: 0 20px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.notes h3 {
+  color: var(--accent2);
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+.notes p {
+  margin: 0 0 12px;
+  max-width: 70ch;
+}
+
+/* the gallery of modes */
+.gallery {
+  max-width: 1180px;
+  margin: 24px auto;
+  padding: 0 20px;
+}
+.gallery h2 {
+  color: var(--accent2);
+  font-size: 22px;
+  margin: 26px 0 4px;
+}
+.gallery p.lead {
+  color: var(--muted);
+  font-size: 14px;
+  margin: 0 0 16px;
+  max-width: 70ch;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+}
+.tile {
+  display: block;
+  text-decoration: none;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 8px;
+  background: #00000040;
+  transition:
+    border-color 0.3s,
+    background 0.3s;
+}
+.tile:hover {
+  border-color: #ffd77a66;
+  background: #ffffff0f;
+}
+.tile > canvas {
+  width: 100%;
+  display: block;
+  border-radius: 6px;
+}
+.tile > .cap {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--muted);
+  padding-top: 6px;
+}
+.tile > .cap > b {
+  color: var(--accent2);
+  font-weight: normal;
+}
+
+footer {
+  max-width: 1180px;
+  margin: 40px auto 0;
+  padding: 20px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 13px;
+}

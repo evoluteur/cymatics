@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-063933E3C2"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-063933E3C2");
+    </script>
+    <title>Cymatics Modes - The Chladni figures of a plate and a drumhead</title>
+    <link rel="canonical" href="https://evoluteur.github.io/cymatics/modes.html" />
+    <meta charset="utf-8" />
+    <meta http-equiv="content-language" content="en" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <meta name="theme-color" content="#0b0b18" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Marcellus"
+    />
+    <link href="cy.css" rel="stylesheet" />
+    <script src="js/cymatics.js"></script>
+    <script src="js/modes.js"></script>
+    <meta
+      name="keywords"
+      content="chladni figures, chladni patterns, vibration modes, nodal lines, nodal circles, bessel, drumhead, square plate, resonance, frequency, gallery"
+    />
+    <meta
+      name="description"
+      content="The Chladni figures of a square plate and the modes of a drumhead, each with the frequency at which it rings, computed from the wave equation."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Olivier Giulieri" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Evoluteur" />
+    <meta property="og:title" content="Cymatics Modes" />
+    <meta
+      property="og:description"
+      content="The Chladni figures of a square plate and the modes of a drumhead, each with the frequency at which it rings."
+    />
+    <meta
+      property="og:url"
+      content="https://evoluteur.github.io/cymatics/modes.html"
+    />
+  </head>
+
+  <body onload="setupModesPage()">
+    <header id="header">
+      <div class="links">
+        <a href="index.html">Player</a>
+        <a
+          href="https://github.com/evoluteur/cymatics"
+          target="_blank"
+          rel="noopener"
+          >GitHub</a
+        >
+      </div>
+      <h1>Cy<span>matics</span> modes</h1>
+    </header>
+
+    <section class="gallery">
+      <h2>Square plate</h2>
+      <p class="lead">
+        The classic Chladni figures, drawn as the nodal set of two degenerate
+        modes cancelling each other. Frequencies are for a steel plate 30 cm
+        square and 1 mm thick. Click any figure to hear it and watch the sand
+        find it.
+      </p>
+      <div class="grid" id="squares"></div>
+
+      <h2>Drumhead</h2>
+      <p class="lead">
+        A circular membrane fixed at its rim. The first number counts the nodal
+        diameters, the second the nodal circles. Frequencies are for a head
+        30 cm across at the tension of a tom.
+      </p>
+      <div class="grid" id="circles"></div>
+    </section>
+
+    <footer>
+      <p>
+        Every figure on this page is computed in your browser from the wave
+        equation: no images, no libraries, no tables of Bessel zeros.
+        <a href="index.html">Back to the player</a>.
+      </p>
+      &copy; 2026
+      <a href="https://evoluteur.github.io/" target="_blank">Olivier Giulieri</a>
+    </footer>
+  </body>
+</html>
