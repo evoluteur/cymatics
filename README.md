@@ -18,6 +18,8 @@ Drag the frequency slider and the plate jumps to whichever mode resonates neares
 
 The sand is a particle simulation, not a drawing. Each grain measures how far it is from the nearest nodal line, walks downhill, and is thrown about in proportion to how much the plate moves under it. It comes to rest where the plate does not move, which is exactly what sand does on a real plate.
 
+Every grain is drawn on a plain 2D `<canvas>` - no WebGL required.
+
 ## The mathematics
 
 The square plate's figures are the zero set of
