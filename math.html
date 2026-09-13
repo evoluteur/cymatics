@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-063933E3C2"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-063933E3C2");
+    </script>
+    <title>Cymatics Math - The Wave Equation Behind Chladni Figures</title>
+    <link rel="canonical" href="https://evoluteur.github.io/cymatics/math.html" />
+    <meta charset="utf-8" />
+    <meta http-equiv="content-language" content="en" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#0b0b18" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Marcellus"
+    />
+    <link href="cy.css" rel="stylesheet" />
+    <meta
+      name="keywords"
+      content="chladni figures, wave equation, biharmonic equation, thin plate theory, bessel functions, bessel zeros, membrane vibration, standing waves, nodal lines, sophie germain, eigenvalue problem"
+    />
+    <meta
+      name="description"
+      content="How a Chladni figure comes out of the wave equation: the biharmonic plate equation, Bessel functions for the drumhead, and how their zeros are computed from scratch."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Olivier Giulieri" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Evoluteur" />
+    <meta property="og:title" content="Cymatics Math" />
+    <meta
+      property="og:description"
+      content="How a Chladni figure comes out of the wave equation: the plate equation, Bessel functions, and where the frequencies come from."
+    />
+    <meta
+      property="og:url"
+      content="https://evoluteur.github.io/cymatics/math.html"
+    />
+  </head>
+
+  <body>
+    <header id="header">
+      <div class="links">
+        <a href="index.html">Player</a>
+        <a href="modes.html">Modes</a>
+        <a href="math.html" class="current">Math</a>
+        <a
+          href="https://github.com/evoluteur/cymatics"
+          target="_blank"
+          rel="noopener"
+          >GitHub</a
+        >
+      </div>
+      <h1>Cy<span>matics</span> math</h1>
+    </header>
+
+    <section class="notes math">
+      <p class="tagline" style="font-style: italic; color: var(--muted); margin: 0 0 20px">
+        Everything the player draws — the shapes, the frequencies, the way the
+        sand moves — comes out of two eigenvalue problems and one special
+        function. Here is where each number in <a href="https://github.com/evoluteur/cymatics/blob/main/js/cymatics.js">js/cymatics.js</a>
+        comes from.
+      </p>
+
+      <h3>A standing wave, and why sand finds it</h3>
+      <p>
+        A plate or a membrane obeys a wave equation: a rule for how its
+        displacement <code>u(x, y, t)</code> accelerates in response to how
+        it is curved. A standing wave is a solution that does not travel —
+        it factors as <code>u(x, y, t) = &phi;(x, y)&nbsp;cos(&omega;t)</code>,
+        a fixed shape <code>&phi;</code> that scales up and down in place.
+        Substituting that guess turns the time derivative into
+        <code>&minus;&omega;&sup2;</code> and collapses the wave equation
+        into an eigenvalue problem in two variables: find the shapes
+        <code>&phi;</code> and the frequencies <code>&omega;</code> for which
+        the object can ring at all. Those shapes are the <b>modes</b>, and
+        the curves where <code>&phi; = 0</code> are the <b>nodes</b> — they
+        never move, at any <code>t</code>, so a grain of sand that gets close
+        to one has nothing left to push it away.
+      </p>
+
+      <h3>The square plate: a fourth-order equation</h3>
+      <p>
+        A membrane resists being curved because it is stretched, like a drum
+        skin. A plate resists because it is stiff, like a sheet of steel, and
+        stiffness responds to the <i>curvature of the curvature</i> — a
+        fourth derivative, not a second one. Sophie Germain worked out the
+        equation for that in 1815:
+      </p>
+      <code class="eq">D &nabla;&#8308;u = &minus;&rho;h &part;&sup2;u / &part;t&sup2;</code>
+      <p>
+        where <code>&rho;</code> is density, <code>h</code> is thickness, and
+        <code>D = Eh&sup3; / (12(1&minus;&nu;&sup2;))</code> is the flexural
+        rigidity, built from Young's modulus <code>E</code> and Poisson's
+        ratio <code>&nu;</code> — exactly the four numbers sitting in the
+        <code>PLATE</code> constant and the <code>rigidity()</code> function
+        in the code. For a product mode
+        <code>&phi; = cos(m&pi;x/L)&nbsp;cos(n&pi;y/L)</code> on a square of
+        side <code>L</code>, the Laplacian returns
+        <code>&minus;&lambda;&sup2;&phi;</code> with
+        <code>&lambda;&sup2; = &pi;&sup2;(m&sup2;+n&sup2;)/L&sup2;</code>, and
+        applying it twice for the biharmonic operator squares that eigenvalue
+        again. Plugging back into Germain's equation and solving for the
+        frequency gives
+      </p>
+      <code class="eq">f = &pi;(m&sup2;+n&sup2;) / (2L&sup2;) &middot; &radic;(D / &rho;h)</code>
+      <p>
+        which is <code>squareFrequency(m, n, side)</code> in the code, term
+        for term. The important shape of that formula is that frequency
+        climbs with <code>m&sup2;+n&sup2;</code>, not with <code>m+n</code>:
+        a stiff plate's overtones are spaced very differently from a
+        membrane's, which is the whole reason the two objects in this player
+        sound and look so different for the same slider position.
+      </p>
+      <p>
+        The true boundary conditions for a free plate edge are messier than a
+        clean product of cosines — they require the bending moment and the
+        shear to vanish along the border, not the displacement. The cosine
+        product is the classic simplification used to reproduce Chladni's
+        figures in closed form, and it is why the code's own comment calls it
+        "Chladni's square plate," not an exact free-plate solution. What it
+        gets right is the part that matters for the picture: for
+        <code>m &ne; n</code>, swapping the two mode numbers gives a
+        <i>different</i> shape at the <i>same</i> frequency —
+        <code>m&sup2;+n&sup2;</code> does not care which is which. Two
+        degenerate modes at one frequency mean any mix of them is also a
+        valid mode at that frequency, and which mix actually appears depends
+        on exactly where the bow excites the plate. That is what the
+        <b>Superposition</b> slider is: it sweeps
+      </p>
+      <code class="eq">cos(n&pi;x)&nbsp;cos(m&pi;y) + t &middot; cos(m&pi;x)&nbsp;cos(n&pi;y), &nbsp;t &isin; [&minus;1, 1]</code>
+      <p>
+        through every figure that one frequency can produce. When
+        <code>m = n</code> the two terms are identical, there is nothing to
+        superpose, and the slider does nothing — which is exactly what
+        <code>squareAmplitude</code> checks before bothering with the second
+        term.
+      </p>
+
+      <h3>The drumhead: Bessel's equation</h3>
+      <p>
+        A membrane has tension but no stiffness, so it obeys the plain
+        second-order wave equation
+        <code>&part;&sup2;u/&part;t&sup2; = c&sup2;&nabla;&sup2;u</code>, with
+        <code>c</code> the speed of a wave crossing the stretched skin.
+        Separating variables in polar coordinates
+        <code>u = R(r)&nbsp;&Theta;(&theta;)&nbsp;cos(&omega;t)</code>, the
+        angular part must repeat every <code>2&pi;</code>, which forces
+        <code>&Theta;(&theta;) = cos(n&theta;)</code> for an integer
+        <code>n</code>. What is left for the radial part is Bessel's
+        equation of order <code>n</code>:
+      </p>
+      <code class="eq">r&sup2;R&Prime; + rR&prime; + (k&sup2;r&sup2; &minus; n&sup2;)R = 0</code>
+      <p>
+        Its solution that stays finite at the center, <code>r = 0</code>, is
+        the Bessel function of the first kind, <code>J<sub>n</sub>(kr)</code>
+        — the other independent solution blows up there and is discarded,
+        since a drumhead has no hole in the middle. Clamping the rim,
+        <code>R(a) = 0</code>, means <code>k&middot;a</code> has to land on
+        one of <code>J<sub>n</sub></code>'s zeros: call the
+        <code>s</code>-th positive one <code>&alpha;<sub>n,s</sub></code>.
+        Then <code>k = &alpha;<sub>n,s</sub>/a</code>, and since
+        <code>&omega; = ck</code>, the frequency is
+      </p>
+      <code class="eq">f = c&nbsp;&alpha;<sub>n,s</sub> / (2&pi;a)</code>
+      <p>
+        which is <code>circleFrequency(n, s, radius)</code>, with
+        <code>MEMBRANE.speed</code> standing in for <code>c</code> and
+        <code>radius = size / 2</code>. The mode shape itself,
+        <code>J<sub>n</sub>(&alpha;<sub>n,s</sub>r/a)&nbsp;cos(n&theta;)</code>,
+        is what <code>circleAmplitude</code> evaluates: <code>n</code> counts
+        the nodal diameters, where <code>cos(n&theta;)</code> crosses zero,
+        and <code>s</code> counts the nodal circles, where
+        <code>J<sub>n</sub></code> does. Unlike the plate, this frequency
+        grows with the Bessel zero itself, not its square — a membrane's
+        overtones are much more tightly packed than a plate's.
+      </p>
+
+      <h3>Bessel functions, computed from nothing</h3>
+      <p>
+        There is no elementary closed form for <code>J<sub>n</sub></code>, so
+        it is built straight from its power series:
+      </p>
+      <code class="eq">J<sub>n</sub>(x) = &sum;<sub>k=0</sub><sup>&infin;</sup> (&minus;1)<sup>k</sup> / (k!&nbsp;(k+n)!) &middot; (x/2)<sup>2k+n</sup></code>
+      <p>
+        <code>besselJ</code> walks that sum term by term, updating each term
+        from the last with a single multiply-and-divide rather than
+        recomputing factorials, and stops once a term is too small to move
+        the total — in practice a few dozen terms for the values this player
+        needs.
+      </p>
+      <p>
+        The zeros <code>&alpha;<sub>n,s</sub></code> have no formula either.
+        <code>besselZeros</code> finds them the way you would with a
+        pencil and a table of values: step along <code>x</code> in small
+        increments, watch for the sign of <code>J<sub>n</sub></code> to
+        flip, and once it does, bisect that bracket sixty times to pin the
+        crossing down to full floating-point precision. It is slow work done
+        once — the first nine zeros of each order are cached in
+        <code>ZEROS</code> the first time they're asked for, since every
+        animation frame reuses them.
+      </p>
+
+      <h3>From a formula to a grain of sand</h3>
+      <p>
+        None of the sand simulation needs a closed form — it only asks the
+        mode shape a local question. For a grain at <code>(x, y)</code>, the
+        player samples <code>|&phi;|</code> at four nearby points to get a
+        finite-difference gradient, then divides the amplitude there by the
+        length of that gradient. That quotient behaves like "distance to the
+        nearest node" whether the wave is steep, near the middle of a
+        drumhead, or shallow, near its rim, which a raw amplitude value
+        would not. Each grain nudges itself downhill along that gradient,
+        with more jitter the further it still has to go, and stops once it's
+        within a hair's width of zero — which is the whole physical story:
+        sand is thrown from where the plate moves and left alone where it
+        does not.
+      </p>
+
+      <h3>The constants behind the numbers</h3>
+      <p>
+        The frequencies you hear are for specific, idealised objects, set at
+        the top of <code>js/cymatics.js</code>: a steel plate
+        (<code>E = 200&nbsp;GPa</code>, <code>&rho; = 7850&nbsp;kg/m&sup3;</code>,
+        <code>&nu; = 0.3</code>, <code>h = 1&nbsp;mm</code>) and a membrane
+        with wave speed <code>c = 100&nbsp;m/s</code>, about right for a
+        drum head under playing tension. Change those four plate numbers or
+        that one membrane number and every frequency in the spectrum moves
+        with them — the shapes would not change at all, since they come from
+        the mode numbers alone, only where each one sits on the frequency
+        slider would.
+      </p>
+    </section>
+
+    <footer>
+      <p>
+        <a href="index.html">Back to the player</a> or see every
+        <a href="modes.html">figure at a glance</a>. Cymatics is open source
+        at <a href="https://github.com/evoluteur/cymatics">GitHub</a> with
+        MIT license.
+      </p>
+      &copy; 2026
+      <a href="https://evoluteur.github.io/" target="_blank">Olivier Giulieri</a>
+    </footer>
+  </body>
+</html>
