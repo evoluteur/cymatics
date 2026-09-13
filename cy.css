@@ -75,6 +75,9 @@ a:hover {
   margin-left: 16px;
   text-decoration: none;
 }
+#header .links > a.current {
+  color: var(--accent);
+}
 
 main {
   display: grid;
@@ -222,6 +225,49 @@ button:hover {
 .notes p {
   margin: 0 0 12px;
   max-width: 70ch;
+}
+.notes h3:not(:first-child) {
+  margin-top: 28px;
+}
+.notes .eq {
+  display: block;
+  margin: 0 0 14px;
+  padding: 10px 14px;
+  background: #00000040;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--accent2);
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  max-width: 1180px;
+  margin: 60px auto;
+  padding: 0 20px;
+  color: var(--muted);
+  font-size: 14px;
+}
+.loading[hidden] {
+  display: none;
+}
+.loading .spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--line);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* the gallery of modes */

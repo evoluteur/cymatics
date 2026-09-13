@@ -79,12 +79,18 @@ const byFrequency = (modes, frequency) =>
     .sort((x, y) => x.frequency - y.frequency);
 
 const setupModesPage = () => {
-  const squares = $("squares");
-  byFrequency(SQUARE_MODES, (m, n) => squareFrequency(m, n, SIZE)).forEach((mode) =>
-    squares.appendChild(tile("square", mode.a, mode.b, mode.frequency))
-  );
-  const circles = $("circles");
-  byFrequency(CIRCLE_MODES, (n, s) => circleFrequency(n, s, SIZE / 2)).forEach((mode) =>
-    circles.appendChild(tile("circle", mode.a, mode.b, mode.frequency))
-  );
+  // Drawing every tile is synchronous and blocks the main thread, so the
+  // spinner needs a frame to actually paint before that work starts.
+  requestAnimationFrame(() => {
+    const squares = $("squares");
+    byFrequency(SQUARE_MODES, (m, n) => squareFrequency(m, n, SIZE)).forEach((mode) =>
+      squares.appendChild(tile("square", mode.a, mode.b, mode.frequency))
+    );
+    const circles = $("circles");
+    byFrequency(CIRCLE_MODES, (n, s) => circleFrequency(n, s, SIZE / 2)).forEach((mode) =>
+      circles.appendChild(tile("circle", mode.a, mode.b, mode.frequency))
+    );
+    $("loading").hidden = true;
+    $("gallery").hidden = false;
+  });
 };

@@ -54,6 +54,7 @@
     <header id="header">
       <div class="links">
         <a href="index.html">Player</a>
+        <a href="modes.html" class="current">Modes</a>
         <a
           href="https://github.com/evoluteur/cymatics"
           target="_blank"
@@ -64,7 +65,9 @@
       <h1>Cy<span>matics</span> modes</h1>
     </header>
 
-    <section class="gallery">
+    <div id="loading" class="loading"><span class="spinner"></span> Computing the figures&hellip;</div>
+
+    <section class="gallery" id="gallery" hidden>
       <h2>Square plate</h2>
       <p class="lead">
         The classic Chladni figures, drawn as the nodal set of two degenerate
