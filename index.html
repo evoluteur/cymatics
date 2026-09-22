@@ -31,7 +31,9 @@
     <script src="js/app.js"></script>
     <script>
       if ("serviceWorker" in navigator) {
-        addEventListener("load", () => navigator.serviceWorker.register("sw.js"));
+        addEventListener("load", () =>
+          navigator.serviceWorker.register("sw.js"),
+        );
       }
     </script>
     <meta
@@ -122,7 +124,9 @@
         </label>
 
         <div class="steps">
-          <button onclick="onStep(-1)" aria-label="previous mode">&larr;</button>
+          <button onclick="onStep(-1)" aria-label="previous mode">
+            &larr;
+          </button>
           <span>mode <b id="modeName"></b></span>
           <button onclick="onStep(1)" aria-label="next mode">&rarr;</button>
         </div>
@@ -200,33 +204,36 @@
       <p>
         Ernst Chladni sprinkled sand on a metal plate and drew a violin bow
         along its edge. At most speeds nothing happened. At certain ones the
-        plate rang, and the sand fled the moving parts to gather along the
-        lines that stood still. Those lines are the nodes of a standing wave,
-        and the picture they make is a Chladni figure.
+        plate rang, and the sand fled the moving parts to gather along the lines
+        that stood still. Those lines are the nodes of a standing wave, and the
+        picture they make is a Chladni figure.
       </p>
       <p>
         The square plate here is a steel sheet 1&nbsp;mm thick, free at its
         edges. Its figures are the zero set of
-        <code>cos(n&pi;x)&nbsp;cos(m&pi;y) &minus;
-        cos(m&pi;x)&nbsp;cos(n&pi;y)</code>: two modes of the same frequency,
-        superposed so that they cancel. The superposition slider sweeps that
-        cancellation, which is why one frequency can show several figures.
+        <code
+          >cos(n&pi;x)&nbsp;cos(m&pi;y) &minus;
+          cos(m&pi;x)&nbsp;cos(n&pi;y)</code
+        >: two modes of the same frequency, superposed so that they cancel. The
+        superposition slider sweeps that cancellation, which is why one
+        frequency can show several figures.
       </p>
       <p>
         The drumhead is an ideal circular membrane fixed at its rim. Its modes
-        are Bessel functions, <code>J<sub>n</sub>(&alpha;r)&nbsp;cos(n&theta;)</code>,
-        giving nodal diameters and nodal circles. The Bessel functions are
-        computed from their series and their zeros are found by bisection, so
-        nothing here comes from a table.
+        are Bessel functions,
+        <code>J<sub>n</sub>(&alpha;r)&nbsp;cos(n&theta;)</code>, giving nodal
+        diameters and nodal circles. The Bessel functions are computed from
+        their series and their zeros are found by bisection, so nothing here
+        comes from a table.
       </p>
       <p>
         The frequencies are the real ones for these idealised objects: a stiff
         plate rings at frequencies proportional to
         <code>m&sup2;&nbsp;+&nbsp;n&sup2;</code>, while a membrane, having
-        tension but no stiffness, rings in proportion to the Bessel zero
-        itself. A real plate of brass or glass, with its own thickness,
-        mounting, and imperfections, will not match these numbers exactly. The
-        shapes are the honest part; treat the frequencies as those of the model.
+        tension but no stiffness, rings in proportion to the Bessel zero itself.
+        A real plate of brass or glass, with its own thickness, mounting, and
+        imperfections, will not match these numbers exactly. The shapes are the
+        honest part; treat the frequencies as those of the model.
       </p>
     </section>
 
@@ -237,26 +244,32 @@
         the sand, and the tone are all computed in the page.
       </p>
       <p>
-        If you like frequencies, see also
+        Had fun browsing the app?
+        <a
+          href="https://github.com/sponsors/evoluteur"
+          target="_blank"
+          rel="noopener"
+          >Buy me a coffee by becoming a sponsor</a
+        >.
+      </p>
+      <p>
+        You may also enjoy
         <a href="https://evoluteur.github.io/healing-frequencies/"
           >Healing-Frequencies</a
-        >
-        and
-        <a href="https://evoluteur.github.io/binaural-beats/">Binaural-Beats</a>.
-        If you like figures made of circles and lines, see
+        >,
         <a href="https://evoluteur.github.io/mandala-maker/">Mandala-Maker</a>,
+        and
         <a href="https://evoluteur.github.io/sacred-geometry/"
           >Sacred-Geometry</a
-        >,
-        <a href="https://evoluteur.github.io/platonic-solids/">Platonic-Solids</a>,
-        and
-        <a href="https://evoluteur.github.io/archimedean-solids/"
-          >Archimedean-Solids</a
         >. See them all on
         <a href="https://evoluteur.github.io/esoterica.html">Esoterica</a>.
       </p>
-      &copy; 2026
-      <a href="https://evoluteur.github.io/" target="_blank">Olivier Giulieri</a>
+      <p class="copyright">
+        &copy; 2026
+        <a href="https://evoluteur.github.io/" target="_blank"
+          >Olivier Giulieri</a
+        >
+      </p>
     </footer>
   </body>
 </html>
