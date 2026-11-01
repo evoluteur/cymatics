@@ -390,16 +390,38 @@ const refreshPanel = () => {
   $("modeName").textContent = state.mode.name;
 };
 
-// picking a frequency picks the mode that actually resonates there
-const settle = (rebuildGrains) => {
+// The address bar always links to the figure on screen. Only what differs
+// from the defaults is written, and the writes are debounced: browsers
+// throttle replaceState, and a slider fires dozens of inputs a second.
+const DEFAULTS = { shape: "square", size: 0.3, mix: -1 };
+let linkTimer = 0;
+const updateLink = () => {
+  clearTimeout(linkTimer);
+  linkTimer = setTimeout(() => {
+    const params = new URLSearchParams();
+    if (state.shape !== DEFAULTS.shape) params.set("shape", state.shape);
+    params.set("mode", state.mode.name);
+    if (state.size !== DEFAULTS.size) params.set("size", Math.round(state.size * 100));
+    if (state.shape === "square" && state.mix !== DEFAULTS.mix) params.set("mix", state.mix);
+    history.replaceState(null, "", `${location.pathname}?${params}`);
+  }, 250);
+};
+
+// Picking a frequency picks the mode that actually resonates there. Some
+// modes share a frequency (0,5 and 3,4 on the square), so a mode asked for
+// by name, as in a link, is taken as named rather than found by frequency.
+const settle = (rebuildGrains, name) => {
   state.modes = spectrum(state.shape, state.size);
   fitRange();
-  state.mode = nearestMode(state.modes, state.frequency);
+  state.mode =
+    (name && state.modes.find((m) => m.name === name)) ||
+    nearestMode(state.modes, state.frequency);
   buildField();
   if (rebuildGrains) scatter();
   refreshPanel();
   retune();
   draw();
+  updateLink();
 };
 
 const onFrequency = (input) => {
@@ -417,6 +439,7 @@ const onMix = (input) => {
   buildField();
   refreshPanel();
   draw();
+  updateLink();
 };
 
 const onGrains = (input) => {
@@ -461,6 +484,11 @@ const resize = () => {
 const init = () => {
   const params = new URLSearchParams(location.search);
   if (params.get("shape") === "circle") state.shape = "circle";
+  // a size in cm and a mix within the sliders' ranges; anything else is ignored
+  const size = Math.round(+params.get("size"));
+  if (size >= 10 && size <= 60) state.size = size / 100;
+  const mix = params.has("mix") ? +params.get("mix") : NaN;
+  if (mix >= -1 && mix <= 1) state.mix = mix;
   state.modes = spectrum(state.shape, state.size);
   const wanted = params.get("mode");
   const picked = wanted && state.modes.find((m) => m.name === wanted);
@@ -473,7 +501,7 @@ const init = () => {
   $("render").value = state.render;
 
   scatter();
-  settle(false);
+  settle(false, picked && picked.name);
   resize();
   window.addEventListener("resize", resize);
   start();
