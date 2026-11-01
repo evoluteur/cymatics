@@ -1,6 +1,6 @@
 {
   "name": "cymatics",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Play a frequency and watch the sand settle into its Chladni figure: square plate and drumhead modes, computed from the wave equation.",
   "repository": "github:evoluteur/cymatics",
   "homepage": "https://evoluteur.github.io/cymatics/",
