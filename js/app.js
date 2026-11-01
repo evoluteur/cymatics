@@ -463,7 +463,7 @@ const onStep = (direction) => {
   const i = state.modes.indexOf(state.mode);
   const next = state.modes[Math.min(Math.max(i + direction, 0), state.modes.length - 1)];
   state.frequency = next.frequency;
-  settle(false);
+  settle(false, next.name); // by name: a twin mode at the same frequency is still a step
 };
 
 const savePNG = () => {
