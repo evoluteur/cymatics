@@ -350,11 +350,21 @@ const retune = () => {
 
 const fFormat = new Intl.NumberFormat(undefined, { maximumFractionDigits: 0 });
 
-// the slider is linear in octaves, the way a frequency sweep is heard
-const LOW = 40;
-const HIGH = 4000;
-const toSlider = (f) => (Math.log(f / LOW) / Math.log(HIGH / LOW)) * 1000;
-const fromSlider = (v) => LOW * Math.pow(HIGH / LOW, v / 1000);
+// The slider is linear in octaves, the way a frequency sweep is heard. It
+// spans the plate's own spectrum, from just below its lowest mode to just
+// above its highest, so every mode can be reached by dragging; the range
+// follows the plate as its shape and size change.
+let low = 40;
+let high = 4000;
+const toSlider = (f) => (Math.log(f / low) / Math.log(high / low)) * 1000;
+const fromSlider = (v) => low * Math.pow(high / low, v / 1000);
+
+const fitRange = () => {
+  low = state.modes[0].frequency / 1.05;
+  high = state.modes[state.modes.length - 1].frequency * 1.05;
+  state.frequency = Math.min(Math.max(state.frequency, low), high);
+  $("freq").value = toSlider(state.frequency);
+};
 
 const modeLabel = () =>
   state.shape === "square"
@@ -383,6 +393,7 @@ const refreshPanel = () => {
 // picking a frequency picks the mode that actually resonates there
 const settle = (rebuildGrains) => {
   state.modes = spectrum(state.shape, state.size);
+  fitRange();
   state.mode = nearestMode(state.modes, state.frequency);
   buildField();
   if (rebuildGrains) scatter();
@@ -429,7 +440,6 @@ const onStep = (direction) => {
   const i = state.modes.indexOf(state.mode);
   const next = state.modes[Math.min(Math.max(i + direction, 0), state.modes.length - 1)];
   state.frequency = next.frequency;
-  $("freq").value = toSlider(state.frequency);
   settle(false);
 };
 
@@ -461,7 +471,6 @@ const init = () => {
   $("mix").value = state.mix;
   $("grains").value = state.grains;
   $("render").value = state.render;
-  $("freq").value = toSlider(state.frequency);
 
   scatter();
   settle(false);
