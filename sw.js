@@ -1,4 +1,4 @@
-const CACHE = "cymatics-v3";
+const CACHE = "cymatics-v4";
 const ASSETS = [
   "./",
   "index.html",
