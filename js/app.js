@@ -334,13 +334,16 @@ const stopTone = () => {
 
 const toggleTone = () => (playing() ? stopTone() : playTone());
 
+// A ramp runs from the previous scheduled event, which may be the moment the
+// oscillator started. Pinning the current pitch first makes every glide start
+// from what is actually sounding, however fast the slider moves.
 const retune = () => {
-  if (oscillator) {
-    oscillator.frequency.linearRampToValueAtTime(
-      state.mode.frequency,
-      audio.currentTime + 0.08
-    );
-  }
+  if (!oscillator) return;
+  const pitch = oscillator.frequency;
+  const now = audio.currentTime;
+  pitch.cancelScheduledValues(now);
+  pitch.setValueAtTime(pitch.value, now);
+  pitch.linearRampToValueAtTime(state.mode.frequency, now + 0.08);
 };
 
 // --- wiring ------------------------------------------------------------
