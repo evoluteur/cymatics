@@ -35,6 +35,11 @@ self.addEventListener("activate", (e) => {
   self.clients.claim();
 });
 
+// Stale-while-revalidate: answer from the cache at once, and refresh the
+// cache from the network behind it. A new release reaches every visitor on
+// their next visit without bumping CACHE; CACHE only needs to change when
+// ASSETS does. Pages are cached by path, so every ?shape=&mode= link to the
+// player is served by the same cached page, online or off.
 self.addEventListener("fetch", (e) => {
   const url = new URL(e.request.url);
   const cacheable =
@@ -42,21 +47,21 @@ self.addEventListener("fetch", (e) => {
     url.hostname === "fonts.googleapis.com" ||
     url.hostname === "fonts.gstatic.com";
   if (e.request.method !== "GET" || !cacheable) return;
+  const page = e.request.mode === "navigate";
+  const key = page ? url.origin + url.pathname : e.request;
   e.respondWith(
-    caches.match(e.request).then(
-      (cached) =>
-        cached ||
-        fetch(e.request)
+    caches.open(CACHE).then((cache) =>
+      cache.match(key).then((cached) => {
+        const fresh = fetch(e.request)
           .then((res) => {
-            if (res.ok) {
-              const copy = res.clone();
-              caches.open(CACHE).then((c) => c.put(e.request, copy));
-            }
+            if (res.ok) cache.put(key, res.clone());
             return res;
           })
-          .catch(() =>
-            e.request.mode === "navigate" ? caches.match("index.html") : undefined,
-          ),
+          .catch(() => cached || (page ? cache.match("index.html") : Response.error()));
+        if (!cached) return fresh;
+        e.waitUntil(fresh.catch(() => {}));
+        return cached;
+      }),
     ),
   );
 });
